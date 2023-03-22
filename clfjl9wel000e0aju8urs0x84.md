@@ -4,6 +4,7 @@ datePublished: Wed Mar 22 2023 11:16:12 GMT+0000 (Coordinated Universal Time)
 cuid: clfjl9wel000e0aju8urs0x84
 slug: setting-up-github-oidc-authentication-with-gcp
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1679483082650/e8c527cc-d457-491e-b8ca-737f0ba0f9be.png
+ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1679483920378/b57aa03c-2dfd-4bb4-80b5-303994945b4e.png
 tags: programming-blogs, aws, github, devops, gcp
 
 ---
