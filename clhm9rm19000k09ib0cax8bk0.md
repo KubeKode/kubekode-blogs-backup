@@ -1,5 +1,6 @@
 ---
 title: "Getting started with ArgoCD"
+seoTitle: "kubekode, devops, programming, argocd, docker, kubernetes, aws"
 datePublished: Sat May 13 2023 17:36:46 GMT+0000 (Coordinated Universal Time)
 cuid: clhm9rm19000k09ib0cax8bk0
 slug: getting-started-with-argocd
@@ -20,7 +21,7 @@ tags: docker, kubernetes, git, devops, argocd
 * It works on the pull deployment model.
     
 
-## Push Deployment vs Push Deployment
+## Push Deployment vs Pull Deployment
 
 * Push deployment is what you do in your CI/CD pipelines that you define using Jenkins/Github Actions/Gitlab CICD/Circle CI.
     
@@ -50,8 +51,8 @@ Application definitions, configurations, and environments should be declarative 
 * For cluster, you can use minikube cluster for getting started.
     
 * ```bash
-    kubectl create namespace argocd
-    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      kubectl create namespace argocd
+      kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
     ```
     
 * Now if you check services in argocd namespace, you will see a service (ClusterIP) named argocd-server.
@@ -59,7 +60,7 @@ Application definitions, configurations, and environments should be declarative 
 * To access argocd-server you port-forward your clusterIP service to 8080 port
     
 * ```bash
-    kubectl port-forward svc/argocd-server -n argocd 8080:443
+      kubectl port-forward svc/argocd-server -n argocd 8080:443
     ```
     
 * Now you access your argocd server on localhost:8080
@@ -71,7 +72,7 @@ Application definitions, configurations, and environments should be declarative 
     * Password: You can get from a secret in your k8s cluster.
         
     * ```bash
-        kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+          kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
         ```
         
 
@@ -80,32 +81,32 @@ Application definitions, configurations, and environments should be declarative 
 * Create a application yaml file for argocd application
     
 * ```yaml
-    apiVersion: argoproj.io/v1alpha1
-    kind: Application
-    metadata:
-      name: myapp-argo-application
-      namespace: argocd
-    spec:
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: myapp
-      source:
-        repoURL: https://github.com/KubeKode/youtube
-        targetRevision: HEAD
-        path: k8s
-      project: default
-      syncPolicy:
-        syncOptions:
-          - CreateNamespace=true
-        automated:
-          selfHeal: true
-          prune: true
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: myapp-argo-application
+        namespace: argocd
+      spec:
+        destination:
+          server: https://kubernetes.default.svc
+          namespace: myapp
+        source:
+          repoURL: https://github.com/KubeKode/youtube
+          targetRevision: HEAD
+          path: k8s
+        project: default
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
+          automated:
+            selfHeal: true
+            prune: true
     ```
     
 * Apply the config file using kubectl
     
 * ```yaml
-    kubectl apply -f application.yml
+      kubectl apply -f application.yml
     ```
     
 
