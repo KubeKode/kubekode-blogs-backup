@@ -8,6 +8,23 @@ tags: cloud, aws, devops, google-cloud-platform, certification
 
 ---
 
+# Important points for ACE Exam
+
+### GCP Management/Basics/Organization etc.
+
+* Always recommended to create a new project, when need a new isolated environment.
+    
+* all resources that share common IAM policies need to be grouped together
+    
+    * Group by Folders.
+        
+    * projects sharing similar IAM policies can be grouped in a folder and then the IAM policies can be applied at the folder level.
+        
+* Cloud identity is a part of GSuite or Google Workspace.
+    
+
+---
+
 ### Google Market Place
 
 * When need to deploy something quickly which is not a Google’s service like Jenkins/wordpress
@@ -31,6 +48,10 @@ tags: cloud, aws, devops, google-cloud-platform, certification
     
     * use gcloud compute reset-windows-password to retrieve the login credentials for the VM.
         
+* For Login to VM using SSH without a public IP address
+    
+    * `Cloud Identity Aware Proxy` can be used to enable access to VMs that don’t have external IP address or don’t permit Direct access over internet.
+        
 * Using customized SSH Keys logging into Instances
     
     * Metadata managed: Upload the public key to project metadata
@@ -43,6 +64,19 @@ tags: cloud, aws, devops, google-cloud-platform, certification
             
         * OS Login API: POST [https://oslogin.googleapis.com/v1/users/ACCOUNT\_EMAIL:importSshPublicKey](https://oslogin.googleapis.com/v1/users/ACCOUNT_EMAIL:importSshPublicKey)
             
+
+---
+
+### Persistent disks & Local SSDs
+
+* If asked: cost-effective & primary storage, high IOPS with low cost - Choose Local SSD.
+    
+* Create a copy of VM
+    
+    * Create custom image from a snapshot
+        
+    * Create a VM from image
+        
 
 ---
 
@@ -96,7 +130,9 @@ tags: cloud, aws, devops, google-cloud-platform, certification
             
 * Subnets IP range can be expanded: **gcloud compute networks subnets expand-ip-range**
     
-* Auto mode can be changed to custom but custom can’t
+* Auto mode can be changed to custom but custom can’t .
+    
+* use service accounts to control access between the application servers and the database servers.
     
 
 ---
@@ -110,7 +146,7 @@ tags: cloud, aws, devops, google-cloud-platform, certification
 
 ---
 
-### Big Query Related
+### Big Query
 
 * If need to analyze the billing data
     
@@ -124,6 +160,12 @@ tags: cloud, aws, devops, google-cloud-platform, certification
             
         * Use permanent or temporary external tables.
             
+    * Use case: Joining 2 external data sources tables for data analytics like BigTable and Cloud storage.
+        
+        * create 2 external tables for bigtable and cloud storage
+            
+        * Join tables through bigquery console and apply appropriate filters.
+            
 * Data catalog
     
     * If you need to find something across multiple projects or datasets.
@@ -133,6 +175,10 @@ tags: cloud, aws, devops, google-cloud-platform, certification
     * Apply user project-level custom query quota for Bigquery
         
     * Change your bigquery model from on-demand to flat rate.
+        
+* If data is broken, first step to debug or finding out the issue
+    
+    * Go to bigquery and review the job to look for errors.
         
 
 ---
@@ -147,6 +193,12 @@ tags: cloud, aws, devops, google-cloud-platform, certification
         
 * Cost Details on billing dashboard gives you cost details for a specific invoice.
     
+* billing alert gets triggered on the project’s total cost and not just for specific service costs.
+    
+* If need alerts for specific service costs, follow this approach
+    
+    * exporting the billing data to bigquery and analyzing the charges incurred by service is the best option.
+        
 
 ---
 
@@ -190,15 +242,39 @@ tags: cloud, aws, devops, google-cloud-platform, certification
     
     * Standard - Frequently accessed data
         
+        * pricing
+            
     * Nearline - Once a month
         
+        * pricing
+            
     * Coldline - Once a quarter
         
+        * pricing
+            
     * Archive - Once a year
+        
+        * pricing
+            
+* Sync files from on-premises to Cloud storage
+    
+    * Use gsutil CLI to write a script
+        
+* Optimal for regional outages and also cost effective storage
+    
+    * Dual regional
+        
+    * if cost-effective not mentioned: multi-regional
+        
+* For configuration from on-premises to Cloud storage
+    
+    * Create a VPN tunnel
+        
+    * configure DNS to resolve \*.[googleapis.com](http://googleapis.com) as a CNAME to [restricted.googleapis.com](http://restricted.googleapis.com).
         
 * To change the storage class:
     
-    ```json
+    ```bash
     gsutil rewrite -s[Storage-class] object-url
     ```
     
@@ -213,7 +289,7 @@ tags: cloud, aws, devops, google-cloud-platform, certification
     
     * A type provider exposes all of the resources of a third-party API to Deployment Manager as base types that you can use in your configurations. These types must be directly served by a RESTful API that supports Create, Read, Update, and Delete (CRUD).
         
-    * If you want to use an API that is not automatically provided by Google with Deployment Manager, you must add the API as a type [provide](http://provider.like/)r
+    * If you want to use an API that is not automatically provided by Google with Deployment Manager, you must add the API as a type [provide](http://provider.Like)r
         
     * Like for creating kubernetes API objects like Daemonsets, pods, deployments etc.
         
@@ -222,16 +298,37 @@ tags: cloud, aws, devops, google-cloud-platform, certification
 
 ### IAM
 
+* Service account roles
+    
+    * `roles/iam.serviceAccountUser`
+        
+        * only provides the user with the ability to use service accounts, but it does not grant permissions to manage or administer service accounts.
+            
+    * `roles/iam.serviceAccountAdmin`
+        
+        * if need to manage all service accounts in a project.
+            
+        * provides the minimum set of permissions required to manage all service accounts for Google Cloud Projects.
+            
 * Follow least privileges principle.
     
+* Custom Roles:
+    
+    * Custom roles include a launch stage, which is stored in the stage property for the role. The launch stage is informational; it helps you keep track of whether each role is ready for widespread use.
+        
+    * ALPHA means the role is still being developed or tested, or it includes permissions for Google Cloud services or features that are not yet public. It is not ready for widespread use.
+        
 * First priority is: Primitive and Predefined roles not custom roles.
     
 * If user is not one, choose groups to provide the permission.
     
 * When que is about Compute VM to Cloud Storage Access
     
-    * Choose creating service account, provide access to cloud storage and assign custom sa to compute VM.
+    * Choose creating service account, provide access to cloud storage and assign custom sa to compute VM.(Even if between 2 projects)
         
+
+**BigQuery**
+
 * Billing Account Roles
     
     * billing.accounts.update” : to update something in billing account
@@ -242,6 +339,17 @@ tags: cloud, aws, devops, google-cloud-platform, certification
         
         * [`bigquery.jobs`](http://bigquery.jobs)`.create`\*\*\*\*
             
+* If question is about an IAM role for bigquery access datasets, not to delete then choose
+    
+    * `custom role`
+        
+
+---
+
+### Identity
+
+* Setup SSO with third-party identity provider in Cloud Identity with Google as a service provider. When using any other idenity accounts like active directory.
+    
 
 ---
 
@@ -279,6 +387,12 @@ tags: cloud, aws, devops, google-cloud-platform, certification
         
 * If need to check creation time of a resource: use activity logs to view configuration category.
     
+* alert notifications for CPU utilization
+    
+    * create cloud monitoring alert policy to that uses threshold as trigger condition.
+        
+    * configure email address in notification channel.
+        
 
 ---
 
@@ -300,6 +414,16 @@ tags: cloud, aws, devops, google-cloud-platform, certification
     
     * Add a new node pool with required configuration.
         
+* Auto provisioning Feature in GKE
+    
+    * Node auto-provisioning is a mechanism of the cluster autoscaler, which scales on a per-node pool basis. With node auto-provisioning enabled, the cluster autoscaler can extend node pools automatically based on the specifications of unschedulable Pods. Using the GKE cluster's node auto-provisioning feature allows for dynamically provisioning nodes with GPUs only when they are needed. This helps optimize cost as resources are only allocated as necessary.
+        
+* Auto Scaling Cluster
+    
+    * Creating a GKE cluster with autoscaling enabled on the node pool allows for automated scaling of the cluster itself based on the workload.
+        
+    * By configuring a minimum and maximum size for the node pool, the cluster can automatically scale up or down the number of nodes based on the demand.
+        
 * Limits per cluster
     
 
@@ -313,6 +437,8 @@ tags: cloud, aws, devops, google-cloud-platform, certification
 
 ### Load Balancing
 
+* If question is about to replicate a VM from a single zone to multiple zones, for high availability setup a load balancer which balance traffic between multiple zones VM instances.
+    
 * HTTP(S) Load Balancer
     
     * If application used to server over HTTPS.
@@ -320,6 +446,14 @@ tags: cloud, aws, devops, google-cloud-platform, certification
     * From Internet to VMs
         
     * External and Internal
+        
+* HTTPS on 443 port : HTTPS Load balancer
+    
+* SSL Proxy load balancer
+    
+    * reverse proxy load balancer that distributes SSL traffic coming from the internet to virtual machine (VM) instances in your Google Cloud VPC network.
+        
+    * ports supported: 25, 43, 110, 143, 195, 443, 465, 587, 700, 993, 995, 1883, 3389, 5222, 5432, 5671, 5672, 5900, 5901, 6379, 8085, 8099, 9092, 9200, and 9300.
         
 
 ---
@@ -346,3 +480,28 @@ tags: cloud, aws, devops, google-cloud-platform, certification
 ### Cloud Functions
 
 * The default invocation limit is 1000/s.
+    
+
+---
+
+### Cloud SQL
+
+* Binary logging
+    
+* Only support MySQL and PostgreSQL
+    
+
+### Cloud Spanner
+
+* ensuring that the primary key does not have monotonically increasing values can help in resolving the read latency-related performance issues.
+    
+
+---
+
+### Gcloud CLI
+
+* In Ubuntu, When you install SDK using apt Cloud SDK Component Manager is disabled and you need to install extra packages again using apt.
+    
+* Make separate configurations for multiple projects
+    
+    * activate the appropriate configuration for project to use.
