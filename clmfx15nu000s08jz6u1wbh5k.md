@@ -1,6 +1,6 @@
 ---
 title: "Creating Sub-domain in Google domains"
-datePublished: Tue Sep 12 2023 06:12:11 GMT+0000 (Coordinated Universal Time)
+datePublished: Wed Aug 16 2023 18:30:00 GMT+0000 (Coordinated Universal Time)
 cuid: clmfx15nu000s08jz6u1wbh5k
 slug: creating-sub-domain-in-google-domains
 cover: https://cdn.hashnode.com/res/hashnode/image/stock/unsplash/zhZydTyNMPg/upload/2de7f6fb08454629fb096f10da7ebd50.jpeg
