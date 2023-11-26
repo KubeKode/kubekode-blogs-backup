@@ -29,7 +29,9 @@ pipeline {
             steps {
                 // Checkout the source code from the Git repository
                 script {
-                    git branch: 'main', credentialsId: 'your-git-credentials', url: GIT_REPO
+                    git branch: 'main',
+                    credentialsId: 'your-git-credentials',
+                     url: GIT_REPO
                 }
             }
         }
@@ -82,7 +84,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                // Deploy to production only if the build is successful and on the main branch
+         // Deploy to production only if build is successful and on the main branch
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
